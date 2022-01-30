@@ -69,6 +69,7 @@ module.exports = () => (req, res, next) => {
 function generateToken(userData) {
     const token = jwt.sign({
         _id: userData._id,
+        username: userData.username,
         email: userData.email
     }, TOKEN_SECRET);
     return token;
