@@ -17,7 +17,7 @@ module.exports = () => {
     async function createItem(data) {
         const existing = await hotelService.getByName(data.name);
 
-        if(existing) {
+        if(existing.length > 0) {
             console.log("Hotel name is taken!");
             throw new Error("Hotel with that name exsisting!");
         }

@@ -2,6 +2,7 @@ const express = require("express");
 const hbs = require("express-handlebars");
 const cookieParser = require("cookie-parser");
 const authMiddleware = require("../middlewares/auth");
+const hotelMiddleware = require("../middlewares/hotel");
 
 module.exports = (app) => {
     app.engine("hbs", hbs.engine({
@@ -11,4 +12,5 @@ module.exports = (app) => {
     app.use(express.urlencoded({extended: true}));
     app.use(cookieParser());
     app.use(authMiddleware());
+    app.use(hotelMiddleware());
 };
