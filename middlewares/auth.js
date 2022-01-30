@@ -14,7 +14,7 @@ module.exports = () => (req, res, next) => {
     }
 
 
-    async function register(email, password) {
+    async function register(email, username, password) {
 
         const existing = await userService.getUserByEmail(email);
     
@@ -22,15 +22,22 @@ module.exports = () => (req, res, next) => {
             console.log("Email is taken!");
             throw new Error("Email is taken!");
         };
+
+        const existingUsername = await userService.getUserByUsername(username);
+
+        if(existingUsername) {
+            console.log("Username is taken!");
+            throw new Error("Username is taken!");
+        }
     
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await userService.createUser(email, hashedPassword);
+        const user = await userService.createUser(email, username, hashedPassword);
         
         res.cookie(COOKIE_NAME ,generateToken(user));
     };
     
-    async function login(email, password) {
-        const existing = await userService.getUserByEmail(email);
+    async function login(username, password) {
+        const existing = await userService.getUserByUsername(username);
     
         if(!existing) {
             console.log("No such user!");

@@ -1,3 +1,5 @@
+const { COOKIE_NAME } = require("../config");
+
 const router = require("express").Router();
 
 
@@ -7,11 +9,20 @@ const router = require("express").Router();
 
     router.post("/register", async(req, res) => {
         try{
-            await req.auth.register(req.body.email, req.body.password);
+
+            if(req.body.username == "" || req.body.email == "" || req.body.password == "" || req.body.rePass == "") {
+                throw new Error("All fields are required!");
+            }
+            if(req.body.password != req.body.rePass) {
+                throw new Error("Passwords must match!");
+            }
+
+            await req.auth.register(req.body.email, req.body.username, req.body.password);
+            res.redirect("/");
         res.redirect("/");
         }catch(err) {
             console.log(err);
-            res.redirect("/auth/register");
+            res.render("register.hbs", {errors: err.message.split("\n")});
         }
     });
 
@@ -19,8 +30,18 @@ const router = require("express").Router();
         res.render("login.hbs");
     });
 
-    router.post("/login", (req, res) => {
-        res.render("login.hbs");
+    router.post("/login", async(req, res) => {
+        try {
+            await req.auth.login(req.body.username, req.body.password);
+            res.redirect("/");
+        }catch(err) {
+        res.render("login.hbs", {errors: err.message.split("\n")});
+        }
+    });
+
+    router.get("/logout", (req, res) => {
+        res.clearCookie(COOKIE_NAME);
+        res.redirect("/");
     });
 
 
