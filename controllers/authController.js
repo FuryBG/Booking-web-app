@@ -7,6 +7,15 @@ const router = require("express").Router();
         res.render("register.hbs");
     });
 
+    router.get("/user/:id", async(req, res) => {
+        let currUser = await req.auth.getUserById(req.user._id);
+        currUser.booked = currUser.booked.map(element => {
+            return element.name + " " + element.city
+        });
+        currUser.booked = currUser.booked.join(", ");
+        res.render("profile.hbs", currUser);
+    });
+
     router.post("/register", async(req, res) => {
         try{
 

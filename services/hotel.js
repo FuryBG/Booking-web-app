@@ -2,7 +2,7 @@ const Hotel = require("../models/Hotel");
 
 
 async function getAll() {
-    const allItems = await Hotel.find({}).sort({rooms: -1});
+    const allItems = await Hotel.find({}).sort({rooms: -1}).lean();
     return allItems;
 };
 
@@ -13,7 +13,7 @@ async function create(data) {
 };
 
 async function getById(id) {
-    const currItem = await Hotel.findById(id);
+    const currItem = await Hotel.findById(id).lean();
     return currItem;
 };
 
@@ -33,6 +33,13 @@ async function del(id) {
     await Hotel.findOneAndDelete({_id: id});
 };
 
+async function book(hotelId, userId) {
+    let currentHotel = await Hotel.findOne({_id: hotelId});
+    currentHotel.userBooked.push(userId);
+    currentHotel.rooms -= 1;
+    currentHotel.save();  
+};
+
 
 
 module.exports = {
@@ -41,5 +48,6 @@ module.exports = {
     create,
     edit,
     del,
-    getByName
+    getByName,
+    book
 };

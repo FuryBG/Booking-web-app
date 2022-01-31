@@ -22,8 +22,21 @@ async function getUserByUsername(username) {
     return currUser;
 };
 
+async function getUserById(id) {
+    const currUser = await User.findById(id).populate("booked").lean();
+    return currUser;
+};
+
+async function book(userId, hotelId) {
+    let currentUser = await User.findOne({_id: userId});
+    currentUser.booked.push(hotelId);
+    currentUser.save();  
+};
+
 module.exports = {
     createUser,
     getUserByEmail,
-    getUserByUsername
+    getUserByUsername,
+    getUserById,
+    book,
 };

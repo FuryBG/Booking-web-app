@@ -13,13 +13,19 @@
 
         <nav>
             {{#if user}}
+            <div class="left-container">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/create">Add +</a></li>
+                </ul>
+            </div>
+
             <div class="right-container">
-                <li><a href="/create">Add +</a></li>
-                <a href="" class="log-out">{{user.username}}</a>
+                <a href="/auth/user/{{_id}}" class="log-out">{{user.username}}</a>
                 <a href="/auth/logout" class="log-out">Logout</a>
             </div>
                 {{else}}
-            <div class="left-container">
+                <div class="left-container">
                 <ul>
                     <li><a href="/">Home</a></li>
                     <li><a href="/auth/login">Login</a></li>

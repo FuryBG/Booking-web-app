@@ -8,7 +8,8 @@ module.exports = () => {
             getById: hotelService.getById,
             createItem,
             deleteItem,
-            editItem: hotelService.edit
+            editItem: hotelService.edit,
+            book: hotelService.book
         };
 
         next();

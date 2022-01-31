@@ -8,7 +8,9 @@ module.exports = () => (req, res, next) => {
         req.auth = {
             register,
             login,
-            logout
+            logout,
+            getUserById: userService.getUserById,
+            book: userService.book
         }
         next();
     }
