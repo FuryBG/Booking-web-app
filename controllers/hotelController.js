@@ -1,4 +1,4 @@
-const { isUser } = require("../middlewares/guards");
+const { isUser, isGuest } = require("../middlewares/guards");
 
 const router = require("express").Router();
 
@@ -8,17 +8,17 @@ router.get("/", async(req, res) => {
     res.render("home.hbs", {allHotels: allHotels});
 });
 
-router.get("/edit/:id", async(req, res) => {
+router.get("/edit/:id", isUser(), async(req, res) => {
     let currHotel = await req.storage.getById(req.params.id);
     res.render("edit.hbs", currHotel);
 });
 
-router.get("/delete/:id", async(req, res) => {
+router.get("/delete/:id", isUser(), async(req, res) => {
     await req.storage.deleteItem(req.params.id);
     res.redirect("/");
 });
 
-router.post("/edit/:id", async(req, res) => {
+router.post("/edit/:id", isUser(), async(req, res) => {
     try {
         if(req.body.name == "" || req.body.city == "" || req.body.imgUrl == "") {
             throw new Error("All fields are required!");
@@ -41,7 +41,7 @@ router.post("/edit/:id", async(req, res) => {
     }
 });
 
-router.get("/book/:id", async(req, res) => {
+router.get("/book/:id", isUser(), async(req, res) => {
     await req.storage.book(req.params.id, req.user._id);
     await req.auth.book(req.user._id, req.params.id);
     res.redirect(`/details/${req.params.id}`);
@@ -60,11 +60,11 @@ router.get("/details/:id", isUser(), async(req, res) => {
     res.render("details.hbs", currHotel);
 });
 
-router.get("/create", (req, res) => {
+router.get("/create", isUser(), (req, res) => {
     res.render("create.hbs");
 });
 
-router.post("/create", async(req, res) => {
+router.post("/create", isUser(), async(req, res) => {
 
     try {
         if(req.body.name == "" || req.body.city == "" || req.body.imgUrl == "") {

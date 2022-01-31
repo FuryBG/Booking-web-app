@@ -1,9 +1,10 @@
 const { COOKIE_NAME } = require("../config");
+const { isGuest, isUser } = require("../middlewares/guards");
 
 const router = require("express").Router();
 
 
-    router.get("/register", (req, res) => {
+    router.get("/register", isGuest(), (req, res) => {
         res.render("register.hbs");
     });
 
@@ -16,7 +17,7 @@ const router = require("express").Router();
         res.render("profile.hbs", currUser);
     });
 
-    router.post("/register", async(req, res) => {
+    router.post("/register", isGuest(), async(req, res) => {
         try{
 
             if(req.body.username == "" || req.body.email == "" || req.body.password == "" || req.body.rePass == "") {
@@ -35,11 +36,11 @@ const router = require("express").Router();
         }
     });
 
-    router.get("/login", (req, res) => {
+    router.get("/login", isGuest(), (req, res) => {
         res.render("login.hbs");
     });
 
-    router.post("/login", async(req, res) => {
+    router.post("/login", isGuest(), async(req, res) => {
         try {
             await req.auth.login(req.body.username, req.body.password);
             res.redirect("/");
